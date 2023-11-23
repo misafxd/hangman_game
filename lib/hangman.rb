@@ -8,17 +8,64 @@ class Game
     @player = Player.new
     @word = Word.new
     @guess_count = 0
-    # puts @word.secret_word
-    # puts @word.secret_word.size
+    @guess_limit = 15
+    @hidden_word = Array.new(@word.secret_word.size) { '_' }
+    rules
+    play
+  end
+
+  def rules
+    puts "1. The objective of the game is to guess a hidden word, before the #{@guess_limit} allowed attempts"
+    puts '2. A word is generated and kept hidden.'
+    puts '3. The player is shown the number of letters in the word using underscores to represent each letter.'
+    puts '4. The player proposes a letter in each turn.'
+    puts '5. The proposed letter is revealed in all corresponding positions in the word if correct.'
+    puts '6. If the letter is not in the word, one attempt is deducted from the allowed total'
+    puts '7. The game ends when the player correctly guesses all the letters in the word or exhausts the 6 attempts.'
+    puts '8. If the player runs out of attempts without guessing the word, they lose.'
+    puts 'Guess the word'
   end
 
   def input
     loop do
-      puts 'Type a char'
+      puts 'Type a char:'
       @input = gets.chomp
       break if @input.match(/[a-zA-Z]/)
     end
     @input
+  end
+
+  def guess_play
+    @guess_count += 1
+    puts "\nGuess number: #{@guess_count}"
+    input
+  end
+
+  def correct_guess
+    if @word.secret_word.include?(@input)
+      @hidden_word.each_index do |index|
+        @hidden_word[index] = @input if @word.secret_word[index] == @input
+      end
+    end
+  end
+
+  def game_status
+    if @hidden_word.join == @word.secret_word
+      puts 'You win!!!'
+      puts "Secret word: #{@word.secret_word}"
+      exit
+    elsif @guess_count == @guess_limit
+      puts 'You lose :( '
+      exit
+    end
+    play
+  end
+
+  def play
+    puts @hidden_word.join(' ')
+    guess_play
+    correct_guess
+    game_status
   end
 end
 
@@ -47,6 +94,9 @@ class Word
     end
   end
 end
+
+  
+
 
 Game.new
 
