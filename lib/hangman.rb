@@ -1,3 +1,5 @@
+require 'yaml'
+
 puts 'Welcome to Hangman Game!!'
 
 # Hangman game The Odin Project
@@ -28,11 +30,28 @@ class Game
 
   def input
     loop do
-      puts 'Type a char:'
+      puts 'Type a char or and option: '
+      puts '1. Save'
+      puts '2. Load last game'
+      puts '3. Exit'
       @input = gets.chomp
-      break if @input.match(/[a-zA-Z]/)
+      break if @input.match(/[a-zA-Z1-3]/)
     end
-    @input
+    check_input(@input)
+  end
+
+  def check_input(input)
+    case input
+    when '1'
+      @guess_count -= 1
+      @player.save_game
+    when '2'
+      @player.load_game
+    when '3'
+      exit
+    else
+      input
+    end
   end
 
   def guess_play
@@ -56,6 +75,7 @@ class Game
       exit
     elsif @guess_count == @guess_limit
       puts 'You lose :( '
+      puts "Secret word: #{@word.secret_word}"
       exit
     end
     play
@@ -70,9 +90,12 @@ class Game
 end
 
 class Player
-  def initialize
-    @error = 0
-    @tries = 6
+  def save_game
+    puts 'Game saved'
+  end
+
+  def load_game
+    puts 'Game loaded'
   end
 end
 
@@ -89,14 +112,10 @@ class Word
   def word_selection(file)
     loop do
       rand_line = rand(file.size)
-      @secret_word = file[rand_line].chomp
+      @secret_word = file[rand_line].chomp.downcase
       break if @secret_word.size >= 5 && @secret_word.size <= 12
     end
   end
 end
 
-  
-
-
 Game.new
-
