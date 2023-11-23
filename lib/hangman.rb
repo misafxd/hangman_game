@@ -7,15 +7,25 @@ class Game
   def initialize
     @player = Player.new
     @word = Word.new
+    @guess_count = 0
     # puts @word.secret_word
     # puts @word.secret_word.size
+  end
+
+  def input
+    loop do
+      puts 'Type a char'
+      @input = gets.chomp
+      break if @input.match(/[a-zA-Z]/)
+    end
+    @input
   end
 end
 
 class Player
   def initialize
     @error = 0
-    @tries = 12
+    @tries = 6
   end
 end
 
@@ -39,3 +49,4 @@ class Word
 end
 
 Game.new
+
