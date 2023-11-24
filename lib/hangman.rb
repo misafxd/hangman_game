@@ -1,5 +1,3 @@
-require 'yaml'
-
 puts 'Welcome to Hangman Game!!'
 
 # Hangman game The Odin Project
@@ -7,10 +5,10 @@ class Game
   attr_accessor :word
 
   def initialize
-    @player = Player.new
     @word = Word.new
+    @hangman = Hangman.new
     @guess_count = 0
-    @guess_limit = 15
+    @guess_limit = 12
     @hidden_word = Array.new(@word.secret_word.size) { '_' }
     rules
     play
@@ -44,9 +42,9 @@ class Game
     case input
     when '1'
       @guess_count -= 1
-      @player.save_game
+      save_game
     when '2'
-      @player.load_game
+      load_game
     when '3'
       exit
     else
@@ -82,20 +80,31 @@ class Game
   end
 
   def play
-    puts @hidden_word.join(' ')
+    puts "\n#{@hidden_word.join(' ')}"
     guess_play
     correct_guess
     game_status
   end
-end
 
-class Player
   def save_game
     puts 'Game saved'
+    File.open('game', 'w+') { |file| file.puts to_s }
   end
 
   def load_game
     puts 'Game loaded'
+    saved_game = File.read('game')
+    game_state = Marshal.load(saved_game)
+    restore_state(game_state)
+  end
+
+  def restore_state(state)
+    @word, @guess_count, @hidden_word = state
+    play
+  end
+
+  def to_s
+    Marshal.dump([@word, @guess_count, @hidden_word])
   end
 end
 
@@ -115,6 +124,13 @@ class Word
       @secret_word = file[rand_line].chomp.downcase
       break if @secret_word.size >= 5 && @secret_word.size <= 12
     end
+  end
+end
+
+# Display stick figure
+class Hangman
+  def initialize
+
   end
 end
 
