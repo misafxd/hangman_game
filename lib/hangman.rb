@@ -68,10 +68,12 @@ class Game
 
   def game_status
     if @hidden_word.join == @word.secret_word
+      @hangman.stick_figure(@guess_count)
       puts 'You win!!!'
       puts "Secret word: #{@word.secret_word}"
       exit
     elsif @guess_count == @guess_limit
+      @hangman.stick_figure(@guess_count)
       puts 'You lose :( '
       puts "Secret word: #{@word.secret_word}"
       exit
@@ -80,6 +82,7 @@ class Game
   end
 
   def play
+    @hangman.stick_figure(@guess_count)
     puts "\n#{@hidden_word.join(' ')}"
     guess_play
     correct_guess
@@ -129,8 +132,65 @@ end
 
 # Display stick figure
 class Hangman
-  def initialize
-
+  def stick_figure(count)
+    case count / 2
+    when 0
+      puts '  _________'
+      puts ' |         |'
+      puts ' |'
+      puts ' |'
+      puts ' |'
+      puts ' |'
+      puts ' |'
+    when 1
+      puts '  _________'
+      puts ' |         |'
+      puts ' |         O'
+      puts ' |'
+      puts ' |'
+      puts ' |'
+      puts ' |'
+    when 2
+      puts '  _________'
+      puts ' |         |'
+      puts ' |         O'
+      puts ' |         |'
+      puts ' |'
+      puts ' |'
+      puts ' |'
+    when 3
+      puts '  _________'
+      puts ' |         |'
+      puts ' |         O'
+      puts ' |        /|'
+      puts ' |'
+      puts ' |'
+      puts ' |'
+    when 4
+      puts '  _________'
+      puts ' |         |'
+      puts ' |         O'
+      puts ' |        /|\ '
+      puts ' |'
+      puts ' |'
+      puts ' |'
+    when 5
+      puts '  _________'
+      puts ' |         |'
+      puts ' |         O'
+      puts ' |        /|\ '
+      puts ' |        /     '
+      puts ' |'
+      puts ' |              '
+    when 6
+      puts '  _________'
+      puts ' |         |    '
+      puts ' |         O    '
+      puts ' |        /|\  '
+      puts ' |        / \  '
+      puts ' |'
+      puts ' |'
+    end
   end
 end
 
