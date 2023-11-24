@@ -60,6 +60,7 @@ class Game
 
   def correct_guess
     if @word.secret_word.include?(@input)
+      @guess_count -= 1
       @hidden_word.each_index do |index|
         @hidden_word[index] = @input if @word.secret_word[index] == @input
       end
